@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "187540655242",
+    "project_id": "biography-bd68c",
+    "storage_bucket": "biography-bd68c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187540655242:android:e98e13fe970443d81a7173",
+        "android_client_info": {
+          "package_name": "com.example.biography"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187540655242-dhtlnp36svnjr9fu50kv032bo5fg3loi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBey18TOuZ3vff4jxe4kUfc9NfellKqM9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187540655242-dhtlnp36svnjr9fu50kv032bo5fg3loi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
