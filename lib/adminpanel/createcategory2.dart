@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class Createcategories2 extends StatefulWidget {
   const Createcategories2({Key? key}) : super(key: key);
@@ -8,6 +11,8 @@ class Createcategories2 extends StatefulWidget {
 }
 
 class _Createcategories2State extends State<Createcategories2> {
+  var firestore = FirebaseFirestore.instance.collection("category");
+  TextEditingController category = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,13 +61,21 @@ class _Createcategories2State extends State<Createcategories2> {
               ),
             ),
             TextField(
+              controller: category,
               decoration: InputDecoration(
                   labelText: "category name", border: OutlineInputBorder()),
             ),
             SizedBox(
               height: 20,
             ),
-            ElevatedButton(onPressed: () {}, child: Text("submit"))
+            ElevatedButton(
+                onPressed: () {
+                  firestore
+                      .add({"category": category.text, "time": DateTime.now()});
+                  Get.back();
+                  category.clear();
+                },
+                child: Text("submit"))
           ],
         ),
       )),

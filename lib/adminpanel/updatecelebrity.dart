@@ -3,29 +3,49 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class Addcelebrity extends StatefulWidget {
-  final String indexID;
-  const Addcelebrity({Key? key, required this.indexID}) : super(key: key);
+class Updatecelebrity extends StatefulWidget {
+  final String name;
+  final String biolink;
+  final String gallerylink;
+  final String movielist;
+  final String id;
+  final String id2;
+  const Updatecelebrity({
+    Key? key,
+    required this.name,
+    required this.biolink,
+    required this.gallerylink,
+    required this.movielist,
+    required this.id,
+    required this.id2,
+  }) : super(key: key);
 
   @override
-  State<Addcelebrity> createState() => _AddcelebrityState();
+  State<Updatecelebrity> createState() => _UpdatecelebrityState();
 }
 
-class _AddcelebrityState extends State<Addcelebrity> {
-  late String id;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    id = widget.indexID;
-  }
-
+class _UpdatecelebrityState extends State<Updatecelebrity> {
   TextEditingController name = TextEditingController();
   TextEditingController biography = TextEditingController();
   TextEditingController gallery = TextEditingController();
   TextEditingController movie = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    name = widget.name == null
+        ? TextEditingController()
+        : TextEditingController(text: widget.name);
+    biography = widget.biolink == null
+        ? TextEditingController()
+        : TextEditingController(text: widget.biolink);
+    gallery = widget.gallerylink == null
+        ? TextEditingController()
+        : TextEditingController(text: widget.gallerylink);
+    movie = widget.movielist == null
+        ? TextEditingController()
+        : TextEditingController(text: widget.movielist);
+  }
 
-  var firestore = FirebaseFirestore.instance.collection("category");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +139,12 @@ class _AddcelebrityState extends State<Addcelebrity> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  firestore.doc(id).collection("celebritylist").add({
+                  FirebaseFirestore.instance
+                      .collection("category")
+                      .doc(widget.id)
+                      .collection("celebritylist")
+                      .doc(widget.id2)
+                      .update({
                     "name": name.text,
                     "biography": biography.text,
                     "movie": movie.text,

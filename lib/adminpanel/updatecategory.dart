@@ -3,34 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class Addcelebrity extends StatefulWidget {
-  final String indexID;
-  const Addcelebrity({Key? key, required this.indexID}) : super(key: key);
+class Updatecategory extends StatefulWidget {
+  final String category;
+  final String id;
+  const Updatecategory({Key? key, required this.category, required this.id})
+      : super(key: key);
 
   @override
-  State<Addcelebrity> createState() => _AddcelebrityState();
+  State<Updatecategory> createState() => _UpdatecategoryState();
 }
 
-class _AddcelebrityState extends State<Addcelebrity> {
-  late String id;
+class _UpdatecategoryState extends State<Updatecategory> {
+  var firestore = FirebaseFirestore.instance.collection("category");
+  TextEditingController category = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    id = widget.indexID;
+    category = widget.category == null
+        ? TextEditingController()
+        : TextEditingController(text: widget.category);
   }
 
-  TextEditingController name = TextEditingController();
-  TextEditingController biography = TextEditingController();
-  TextEditingController gallery = TextEditingController();
-  TextEditingController movie = TextEditingController();
-
-  var firestore = FirebaseFirestore.instance.collection("category");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Celebrity"),
+        title: Text("Create Category"),
       ),
       body: SafeArea(
           child: SingleChildScrollView(
@@ -73,61 +72,25 @@ class _AddcelebrityState extends State<Addcelebrity> {
                 ],
               ),
             ),
-
-            ///name
             TextField(
-              controller: name,
+              controller: category,
               decoration: InputDecoration(
-                  labelText: "name", border: OutlineInputBorder()),
+                  labelText: "category name", border: OutlineInputBorder()),
             ),
-            SizedBox(
-              height: 10,
-            ),
-
-            ///biography link
-            TextField(
-              controller: biography,
-              decoration: InputDecoration(
-                  labelText: "biography link", border: OutlineInputBorder()),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-
-            ///gallery link
-            TextField(
-              controller: gallery,
-              decoration: InputDecoration(
-                  labelText: "Gallery link", border: OutlineInputBorder()),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-
-            ///movie list
-            TextField(
-              controller: movie,
-              decoration: InputDecoration(
-                  labelText: "movie list", border: OutlineInputBorder()),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-
             SizedBox(
               height: 20,
             ),
             ElevatedButton(
                 onPressed: () {
-                  firestore.doc(id).collection("celebritylist").add({
-                    "name": name.text,
-                    "biography": biography.text,
-                    "movie": movie.text,
-                    "gallery": gallery.text,
-                    "time": DateTime.now()
-                  });
+                  FirebaseFirestore.instance
+                      .collection("category")
+                      .doc(widget.id)
+                      .update(
+                          {"category": category.text, "time": DateTime.now()});
+                  // firestore
+                  //     .add({"category": category.text, "time": DateTime.now()});
                   Get.back();
-                  //Addcelebrity
+                  category.clear();
                 },
                 child: Text("submit"))
           ],
