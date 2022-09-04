@@ -55,7 +55,7 @@ class _CelebritynmaeState extends State<Celebritynmae> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
