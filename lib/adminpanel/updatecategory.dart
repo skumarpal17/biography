@@ -1,7 +1,13 @@
+import 'dart:core';
+import 'dart:io';
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Updatecategory extends StatefulWidget {
   final String category;
@@ -16,6 +22,27 @@ class Updatecategory extends StatefulWidget {
 class _UpdatecategoryState extends State<Updatecategory> {
   var firestore = FirebaseFirestore.instance.collection("category");
   TextEditingController category = TextEditingController();
+
+  String imgUrl = "";
+  String imgUrl2 = "";
+
+  void pickUploadImage() async {
+    final image = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        maxHeight: 512,
+        maxWidth: 512,
+        imageQuality: 75);
+    Reference ref = FirebaseStorage.instance.ref().child("profile.jpg");
+    await ref.putFile(File(image!.path));
+    ref.getDownloadURL().then((value) {
+      print(value);
+      setState(() {
+        imgUrl = value;
+        imgUrl2 = value;
+      });
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
