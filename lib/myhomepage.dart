@@ -1,5 +1,7 @@
 import 'package:biography/selectedlist.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -21,15 +23,13 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("Category"),
       ),
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(18.0),
         child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 // maxCrossAxisExtent: 200,
                 // childAspectRatio: 3 / 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10),
             itemCount: myProducts.length,
             itemBuilder: (BuildContext ctx, index) {
               return GestureDetector(
@@ -47,19 +47,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Expanded(
                         child: Container(
+                          margin: EdgeInsets.all(5),
                           color: Colors.blue,
-                          width: wd,
+                          width: Get.width,
                         ),
                       ),
-                      Center(
-                        child: Text("Category Label"),
+                      Text(
+                        "Category Name",
+                        style: TextStyle(fontSize: 18),
                       ),
+                      SizedBox(
+                        height: 3,
+                      )
                     ],
                   ), //Text(myProducts[index]["name"]
                 ),
               );
             }),
-      )),
+      ),
     );
   }
 }

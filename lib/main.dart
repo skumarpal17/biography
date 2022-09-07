@@ -1,3 +1,4 @@
+import 'package:biography/userinterface/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        backgroundColor: Colors.grey,
+        scaffoldBackgroundColor: const Color(0xFFF5F3EF),
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const Categories(),
+      home: const HomePage(),
+      // Categories(),
     );
   }
 }
