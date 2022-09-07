@@ -20,7 +20,7 @@ class _Createcategories2State extends State<Createcategories2> {
   TextEditingController category = TextEditingController();
 
   String imgUrl = "";
-  String imgUrl2 = "";
+  String imgUrl2 = " ";
 
   void pickUploadImage() async {
     var id = new DateTime.now().millisecondsSinceEpoch;
