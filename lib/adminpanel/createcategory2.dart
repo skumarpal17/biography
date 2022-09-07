@@ -1,14 +1,12 @@
 import 'dart:core';
 import 'dart:io';
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 class Createcategories2 extends StatefulWidget {
   const Createcategories2({Key? key}) : super(key: key);
@@ -25,12 +23,14 @@ class _Createcategories2State extends State<Createcategories2> {
   String imgUrl2 = "";
 
   void pickUploadImage() async {
+    var id = new DateTime.now().millisecondsSinceEpoch;
+    print("this is the id $id");
     final image = await ImagePicker().pickImage(
-        source: ImageSource.camera,
+        source: ImageSource.gallery,
         maxHeight: 512,
         maxWidth: 512,
         imageQuality: 75);
-    Reference ref = FirebaseStorage.instance.ref().child("profile.jpg");
+    Reference ref = FirebaseStorage.instance.ref().child("${id}profile.jpg");
     await ref.putFile(File(image!.path));
     ref.getDownloadURL().then((value) {
       print(value);
@@ -58,22 +58,28 @@ class _Createcategories2State extends State<Createcategories2> {
                 children: [
                   Container(
                     height: 150,
-                    width: 150,
+                    width: 210,
                     // color: Colors.green,
                   ),
                   Positioned(
                     top: 23,
                     left: 15,
-                    child: CircleAvatar(
-                      radius: 60,
-                      child: ClipOval(
-                        child: Image.network(imgUrl2,fit: BoxFit.cover, width: 100,height: 100,)
+                    child: Container(
+                      height: 150,
+                      width: Get.width,
+                      color: Colors.black12,
+                      child: Image(
+                        image: NetworkImage(imgUrl2),
+                        alignment: Alignment.center,
+                        height: double.infinity,
+                        width: double.infinity,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
                   Positioned(
-                      top: 90,
-                      right: 9,
+                      bottom: 0,
+                      right: 0,
                       child: CircleAvatar(
                         child: IconButton(
                           icon: Icon(Icons.add),
@@ -85,6 +91,7 @@ class _Createcategories2State extends State<Createcategories2> {
                 ],
               ),
             ),
+            SizedBox(height: 10,),
             TextField(
               controller: category,
               decoration: InputDecoration(
@@ -95,8 +102,11 @@ class _Createcategories2State extends State<Createcategories2> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  firestore
-                      .add({"category": category.text, "time": DateTime.now()});
+                  firestore.add({
+                    "category": category.text,
+                    "time": DateTime.now(),
+                    "photoUrl": imgUrl2
+                  });
                   Get.back();
                   category.clear();
                 },

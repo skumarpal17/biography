@@ -14,6 +14,7 @@ class Updatecelebrity extends StatefulWidget {
   final String movielist;
   final String id;
   final String id2;
+  final String imgUrl;
   const Updatecelebrity({
     Key? key,
     required this.name,
@@ -22,6 +23,7 @@ class Updatecelebrity extends StatefulWidget {
     required this.movielist,
     required this.id,
     required this.id2,
+    required this.imgUrl
   }) : super(key: key);
 
   @override
@@ -37,12 +39,14 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
   String imgUrl2 = "";
 
   void pickUploadImage() async {
+    var id = new DateTime.now().millisecondsSinceEpoch;
+    print("this is the id $id");
     final image = await ImagePicker().pickImage(
-        source: ImageSource.camera,
+        source: ImageSource.gallery,
         maxHeight: 512,
         maxWidth: 512,
         imageQuality: 75);
-    Reference ref = FirebaseStorage.instance.ref().child("profile.jpg");
+    Reference ref = FirebaseStorage.instance.ref().child("${id}profile.jpg");
     await ref.putFile(File(image!.path));
     ref.getDownloadURL().then((value) {
       print(value);
@@ -74,7 +78,7 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Celebrity"),
+        title: Text("Update Celebrity"),
       ),
       body: SafeArea(
           child: SingleChildScrollView(
@@ -97,10 +101,10 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                       radius: 60,
                       child: ClipOval(
                         child: Image.network(
-                          width: 100,
-                          height: 100,
+                          width: 120,
+                          height: 120,
                           fit: BoxFit.cover,
-                          'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
+                          imgUrl == "" ? widget.imgUrl :imgUrl ,
                         ),
                       ),
                     ),
@@ -111,7 +115,9 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                       child: CircleAvatar(
                         child: IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () {
+                            pickUploadImage();
+                          },
                         ),
                       )),
                 ],
@@ -173,12 +179,13 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                     "biography": biography.text,
                     "movie": movie.text,
                     "gallery": gallery.text,
-                    "time": DateTime.now()
+                    "time": DateTime.now(),
+                    "imgUrl" :imgUrl2
                   });
                   Get.back();
                   //Addcelebrity
                 },
-                child: Text("submit"))
+                child: Text("update"))
           ],
         ),
       )),

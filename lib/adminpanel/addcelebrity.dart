@@ -9,6 +9,7 @@ import 'dart:io';
 
 class Addcelebrity extends StatefulWidget {
   final String indexID;
+
   const Addcelebrity({Key? key, required this.indexID}) : super(key: key);
 
   @override
@@ -17,26 +18,28 @@ class Addcelebrity extends StatefulWidget {
 
 class _AddcelebrityState extends State<Addcelebrity> {
 
-  String imgUrl = "";
   String imgUrl2 = "";
 
   void pickUploadImage() async {
+    var id = new DateTime.now().millisecondsSinceEpoch;
+    print("this is the id $id");
     final image = await ImagePicker().pickImage(
-        source: ImageSource.camera,
+        source: ImageSource.gallery,
         maxHeight: 512,
         maxWidth: 512,
         imageQuality: 75);
-    Reference ref = FirebaseStorage.instance.ref().child("profile.jpg");
+    Reference ref = FirebaseStorage.instance.ref().child("${id}profile.jpg");
     await ref.putFile(File(image!.path));
     ref.getDownloadURL().then((value) {
       print(value);
       setState(() {
-        imgUrl = value;
         imgUrl2 = value;
       });
     });
   }
+
   late String id;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -50,6 +53,7 @@ class _AddcelebrityState extends State<Addcelebrity> {
   TextEditingController movie = TextEditingController();
 
   var firestore = FirebaseFirestore.instance.collection("category");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,10 +81,10 @@ class _AddcelebrityState extends State<Addcelebrity> {
                       radius: 60,
                       child: ClipOval(
                         child: Image.network(
-                          width: 100,
-                          height: 100,
+                          width: 120,
+                          height: 120,
                           fit: BoxFit.cover,
-                          'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
+                          imgUrl2,
                         ),
                       ),
                     ),
@@ -91,7 +95,9 @@ class _AddcelebrityState extends State<Addcelebrity> {
                       child: CircleAvatar(
                         child: IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () {
+                            pickUploadImage();
+                          },
                         ),
                       )),
                 ],
@@ -148,7 +154,8 @@ class _AddcelebrityState extends State<Addcelebrity> {
                     "biography": biography.text,
                     "movie": movie.text,
                     "gallery": gallery.text,
-                    "time": DateTime.now()
+                    "time": DateTime.now(),
+                    "imgurl":imgUrl2
                   });
                   Get.back();
                   //Addcelebrity

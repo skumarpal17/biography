@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'dart:io';
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,13 @@ import 'package:image_picker/image_picker.dart';
 class Updatecategory extends StatefulWidget {
   final String category;
   final String id;
-  const Updatecategory({Key? key, required this.category, required this.id})
+  final String imgUrl;
+
+  const Updatecategory(
+      {Key? key,
+      required this.category,
+      required this.id,
+      required this.imgUrl})
       : super(key: key);
 
   @override
@@ -23,12 +28,11 @@ class _UpdatecategoryState extends State<Updatecategory> {
   var firestore = FirebaseFirestore.instance.collection("category");
   TextEditingController category = TextEditingController();
 
-  String imgUrl = "";
   String imgUrl2 = "";
 
   void pickUploadImage() async {
     final image = await ImagePicker().pickImage(
-        source: ImageSource.camera,
+        source: ImageSource.gallery,
         maxHeight: 512,
         maxWidth: 512,
         imageQuality: 75);
@@ -37,7 +41,6 @@ class _UpdatecategoryState extends State<Updatecategory> {
     ref.getDownloadURL().then((value) {
       print(value);
       setState(() {
-        imgUrl = value;
         imgUrl2 = value;
       });
     });
@@ -69,35 +72,42 @@ class _UpdatecategoryState extends State<Updatecategory> {
                 children: [
                   Container(
                     height: 150,
-                    width: 150,
+                    width: 210,
                     // color: Colors.green,
                   ),
                   Positioned(
                     top: 23,
                     left: 15,
-                    child: CircleAvatar(
-                      radius: 60,
-                      child: ClipOval(
-                        child: Image.network(
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                          'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
-                        ),
+                    child: Container(
+                      height: 150,
+                      width: Get.width,
+                      color: Colors.black12,
+                      child: Image(
+                        image: NetworkImage(
+                            imgUrl2 == "" ? widget.imgUrl : imgUrl2),
+                        alignment: Alignment.center,
+                        height: double.infinity,
+                        width: double.infinity,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
                   Positioned(
-                      top: 90,
-                      right: 9,
+                      bottom: 0,
+                      right: 0,
                       child: CircleAvatar(
                         child: IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () {
+                            pickUploadImage();
+                          },
                         ),
                       )),
                 ],
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             TextField(
               controller: category,
@@ -112,8 +122,11 @@ class _UpdatecategoryState extends State<Updatecategory> {
                   FirebaseFirestore.instance
                       .collection("category")
                       .doc(widget.id)
-                      .update(
-                          {"category": category.text, "time": DateTime.now()});
+                      .update({
+                    "category": category.text,
+                    "time": DateTime.now(),
+                    "imgUrl": imgUrl2
+                  });
                   // firestore
                   //     .add({"category": category.text, "time": DateTime.now()});
                   Get.back();
