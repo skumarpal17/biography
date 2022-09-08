@@ -18,7 +18,7 @@ class Addcelebrity extends StatefulWidget {
 
 class _AddcelebrityState extends State<Addcelebrity> {
 
-  String imgUrl2 = "";
+  String imgUrl = "";
 
   void pickUploadImage() async {
     var id = new DateTime.now().millisecondsSinceEpoch;
@@ -33,7 +33,7 @@ class _AddcelebrityState extends State<Addcelebrity> {
     ref.getDownloadURL().then((value) {
       print(value);
       setState(() {
-        imgUrl2 = value;
+        imgUrl = value;
       });
     });
   }
@@ -80,11 +80,11 @@ class _AddcelebrityState extends State<Addcelebrity> {
                     child: CircleAvatar(
                       radius: 60,
                       child: ClipOval(
-                        child: Image.network(
-                          width: 120,
-                          height: 120,
+                        child:imgUrl == "" ? Image.asset("assets/images/nopic.png"):Image.network(
+                          width: 122,
+                          height: 122,
                           fit: BoxFit.cover,
-                          imgUrl2,
+                          imgUrl,
                         ),
                       ),
                     ),
@@ -155,7 +155,7 @@ class _AddcelebrityState extends State<Addcelebrity> {
                     "movie": movie.text,
                     "gallery": gallery.text,
                     "time": DateTime.now(),
-                    "imgurl":imgUrl2
+                    "imgUrl":imgUrl
                   });
                   Get.back();
                   //Addcelebrity

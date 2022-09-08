@@ -20,7 +20,6 @@ class _Createcategories2State extends State<Createcategories2> {
   TextEditingController category = TextEditingController();
 
   String imgUrl = "";
-  String imgUrl2 = " ";
 
   void pickUploadImage() async {
     var id = new DateTime.now().millisecondsSinceEpoch;
@@ -36,7 +35,6 @@ class _Createcategories2State extends State<Createcategories2> {
       print(value);
       setState(() {
         imgUrl = value;
-        imgUrl2 = value;
       });
     });
   }
@@ -53,43 +51,33 @@ class _Createcategories2State extends State<Createcategories2> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 150,
-                    width: 210,
-                    // color: Colors.green,
+            SizedBox(height: 10,),
+            Stack(
+              children: [
+                Container(
+                  height: 120,
+                  width: Get.width * 0.6,
+                  color: Colors.black12,
+                  child: imgUrl == "" ? Image.asset("assets/images/noimg.jpg",fit: BoxFit.fill,):Image(
+                    image: NetworkImage(imgUrl),
+                    alignment: Alignment.center,
+                    height: double.infinity,
+                    width: double.infinity,
+                    fit: BoxFit.fill,
                   ),
-                  Positioned(
-                    top: 23,
-                    left: 15,
-                    child: Container(
-                      height: 150,
-                      width: Get.width,
-                      color: Colors.black12,
-                      child: Image(
-                        image: NetworkImage(imgUrl2),
-                        alignment: Alignment.center,
-                        height: double.infinity,
-                        width: double.infinity,
-                        fit: BoxFit.fill,
+                ),
+                Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: CircleAvatar(
+                      child: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          pickUploadImage();
+                        },
                       ),
-                    ),
-                  ),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        child: IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () {
-                            pickUploadImage();
-                          },
-                        ),
-                      )),
-                ],
-              ),
+                    )),
+              ],
             ),
             SizedBox(height: 10,),
             TextField(
@@ -105,7 +93,7 @@ class _Createcategories2State extends State<Createcategories2> {
                   firestore.add({
                     "category": category.text,
                     "time": DateTime.now(),
-                    "photoUrl": imgUrl2
+                    "imgUrl": imgUrl
                   });
                   Get.back();
                   category.clear();

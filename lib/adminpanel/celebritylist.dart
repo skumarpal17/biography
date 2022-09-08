@@ -59,7 +59,7 @@ class _CelebritylistState extends State<Celebritylist> {
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
-                                  'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
+                                  snapshot.data!.docs[index]["imgUrl"].toString(),
                                 ),
                               ),
                             ),
@@ -85,7 +85,7 @@ class _CelebritylistState extends State<Celebritylist> {
                                             id2: id2,
                                             id: id,
                                             imgUrl: snapshot.data!.docs[index]
-                                                ["name"],
+                                                ["imgUrl"],
                                           ),
                                         );
                                       },

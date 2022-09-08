@@ -31,12 +31,14 @@ class _UpdatecategoryState extends State<Updatecategory> {
   String imgUrl2 = "";
 
   void pickUploadImage() async {
+    var id = new DateTime.now().millisecondsSinceEpoch;
+    print("this is the id $id");
     final image = await ImagePicker().pickImage(
         source: ImageSource.gallery,
         maxHeight: 512,
         maxWidth: 512,
         imageQuality: 75);
-    Reference ref = FirebaseStorage.instance.ref().child("profile.jpg");
+    Reference ref = FirebaseStorage.instance.ref().child("${id}profile.jpg");
     await ref.putFile(File(image!.path));
     ref.getDownloadURL().then((value) {
       print(value);
@@ -67,44 +69,33 @@ class _UpdatecategoryState extends State<Updatecategory> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 150,
-                    width: 210,
-                    // color: Colors.green,
+            SizedBox(height: 10,),
+            Stack(
+              children: [
+                Container(
+                  height: 120,
+                  width: Get.width * 0.6,
+                  child: Image(
+                    image: NetworkImage(
+                        imgUrl2 == "" ? widget.imgUrl : imgUrl2),
+                    alignment: Alignment.center,
+                    height: double.infinity,
+                    width: double.infinity,
+                    fit: BoxFit.fill,
                   ),
-                  Positioned(
-                    top: 23,
-                    left: 15,
-                    child: Container(
-                      height: 150,
-                      width: Get.width,
-                      color: Colors.black12,
-                      child: Image(
-                        image: NetworkImage(
-                            imgUrl2 == "" ? widget.imgUrl : imgUrl2),
-                        alignment: Alignment.center,
-                        height: double.infinity,
-                        width: double.infinity,
-                        fit: BoxFit.fill,
+                ),
+                Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: CircleAvatar(
+                      child: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          pickUploadImage();
+                        },
                       ),
-                    ),
-                  ),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        child: IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () {
-                            pickUploadImage();
-                          },
-                        ),
-                      )),
-                ],
-              ),
+                    )),
+              ],
             ),
             SizedBox(
               height: 10,
@@ -125,7 +116,7 @@ class _UpdatecategoryState extends State<Updatecategory> {
                       .update({
                     "category": category.text,
                     "time": DateTime.now(),
-                    "imgUrl": imgUrl2
+                   "imgUrl": imgUrl2 == "" ? widget.imgUrl : imgUrl2
                   });
                   // firestore
                   //     .add({"category": category.text, "time": DateTime.now()});

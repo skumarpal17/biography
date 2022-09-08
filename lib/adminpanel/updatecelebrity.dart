@@ -35,8 +35,7 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
   TextEditingController biography = TextEditingController();
   TextEditingController gallery = TextEditingController();
   TextEditingController movie = TextEditingController();
-  String imgUrl = "";
-  String imgUrl2 = "";
+  String imgUrl2 ="assets/images/nopic.png";
 
   void pickUploadImage() async {
     var id = new DateTime.now().millisecondsSinceEpoch;
@@ -51,7 +50,6 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
     ref.getDownloadURL().then((value) {
       print(value);
       setState(() {
-        imgUrl = value;
         imgUrl2 = value;
       });
     });
@@ -104,7 +102,7 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                           width: 120,
                           height: 120,
                           fit: BoxFit.cover,
-                          imgUrl == "" ? widget.imgUrl :imgUrl ,
+                          imgUrl2 =="assets/images/nopic.png"? widget.imgUrl :imgUrl2 ,
                         ),
                       ),
                     ),
@@ -180,7 +178,7 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                     "movie": movie.text,
                     "gallery": gallery.text,
                     "time": DateTime.now(),
-                    "imgUrl" :imgUrl2
+                    "imgUrl" :imgUrl2 == "assets/images/nopic.png" ? widget.imgUrl : imgUrl2
                   });
                   Get.back();
                   //Addcelebrity

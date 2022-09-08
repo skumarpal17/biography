@@ -121,7 +121,7 @@ class _CategoriesState extends State<Categories> {
                           setState(() {});
                           id1 = snapshot.data!.docs[index].id;
                           Get.to(() => Celebritylist(indexID: id1),
-                              transition: Transition.circularReveal);
+                              transition: Transition.circularReveal,duration: Duration(seconds: 1));
                           print("this is category id $id1");
                         },
                       );
