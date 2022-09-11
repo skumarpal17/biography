@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:core';
+import 'dart:io';
 
 class Updatecelebrity extends StatefulWidget {
   final String name;
@@ -10,15 +14,17 @@ class Updatecelebrity extends StatefulWidget {
   final String movielist;
   final String id;
   final String id2;
-  const Updatecelebrity({
-    Key? key,
-    required this.name,
-    required this.biolink,
-    required this.gallerylink,
-    required this.movielist,
-    required this.id,
-    required this.id2,
-  }) : super(key: key);
+  final String imgUrl;
+  const Updatecelebrity(
+      {Key? key,
+      required this.name,
+      required this.biolink,
+      required this.gallerylink,
+      required this.movielist,
+      required this.id,
+      required this.id2,
+      required this.imgUrl})
+      : super(key: key);
 
   @override
   State<Updatecelebrity> createState() => _UpdatecelebrityState();
@@ -29,6 +35,26 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
   TextEditingController biography = TextEditingController();
   TextEditingController gallery = TextEditingController();
   TextEditingController movie = TextEditingController();
+  String imgUrl2 = "assets/images/nopic.png";
+
+  void pickUploadImage() async {
+    var id = new DateTime.now().millisecondsSinceEpoch;
+    print("this is the id $id");
+    final image = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxHeight: 512,
+        maxWidth: 512,
+        imageQuality: 75);
+    Reference ref = FirebaseStorage.instance.ref().child("${id}profile.jpg");
+    await ref.putFile(File(image!.path));
+    ref.getDownloadURL().then((value) {
+      print(value);
+      setState(() {
+        imgUrl2 = value;
+      });
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -50,7 +76,7 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Celebrity"),
+        title: Text("Update Celebrity"),
       ),
       body: SafeArea(
           child: SingleChildScrollView(
@@ -73,10 +99,12 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                       radius: 60,
                       child: ClipOval(
                         child: Image.network(
-                          width: 100,
-                          height: 100,
+                          width: 120,
+                          height: 120,
                           fit: BoxFit.cover,
-                          'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
+                          imgUrl2 == "assets/images/nopic.png"
+                              ? widget.imgUrl
+                              : imgUrl2,
                         ),
                       ),
                     ),
@@ -87,7 +115,9 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                       child: CircleAvatar(
                         child: IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () {
+                            pickUploadImage();
+                          },
                         ),
                       )),
                 ],
@@ -149,12 +179,15 @@ class _UpdatecelebrityState extends State<Updatecelebrity> {
                     "biography": biography.text,
                     "movie": movie.text,
                     "gallery": gallery.text,
-                    "time": DateTime.now()
+                    "time": DateTime.now(),
+                    "imgUrl": imgUrl2 == "assets/images/nopic.png"
+                        ? widget.imgUrl
+                        : imgUrl2
                   });
                   Get.back();
                   //Addcelebrity
                 },
-                child: Text("submit"))
+                child: Text("update"))
           ],
         ),
       )),

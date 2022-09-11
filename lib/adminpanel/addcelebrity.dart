@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:core';
+import 'dart:io';
 
 class Addcelebrity extends StatefulWidget {
   final String indexID;
+
   const Addcelebrity({Key? key, required this.indexID}) : super(key: key);
 
   @override
@@ -12,7 +17,28 @@ class Addcelebrity extends StatefulWidget {
 }
 
 class _AddcelebrityState extends State<Addcelebrity> {
+  String imgUrl = "";
+
+  void pickUploadImage() async {
+    var id = new DateTime.now().millisecondsSinceEpoch;
+    print("this is the id $id");
+    final image = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxHeight: 512,
+        maxWidth: 512,
+        imageQuality: 75);
+    Reference ref = FirebaseStorage.instance.ref().child("${id}profile.jpg");
+    await ref.putFile(File(image!.path));
+    ref.getDownloadURL().then((value) {
+      print(value);
+      setState(() {
+        imgUrl = value;
+      });
+    });
+  }
+
   late String id;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -26,6 +52,7 @@ class _AddcelebrityState extends State<Addcelebrity> {
   TextEditingController movie = TextEditingController();
 
   var firestore = FirebaseFirestore.instance.collection("category");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,12 +79,14 @@ class _AddcelebrityState extends State<Addcelebrity> {
                     child: CircleAvatar(
                       radius: 60,
                       child: ClipOval(
-                        child: Image.network(
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                          'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
-                        ),
+                        child: imgUrl == ""
+                            ? Image.asset("assets/images/nopic.png")
+                            : Image.network(
+                                width: 122,
+                                height: 122,
+                                fit: BoxFit.cover,
+                                imgUrl,
+                              ),
                       ),
                     ),
                   ),
@@ -67,7 +96,9 @@ class _AddcelebrityState extends State<Addcelebrity> {
                       child: CircleAvatar(
                         child: IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () {
+                            pickUploadImage();
+                          },
                         ),
                       )),
                 ],
@@ -124,7 +155,8 @@ class _AddcelebrityState extends State<Addcelebrity> {
                     "biography": biography.text,
                     "movie": movie.text,
                     "gallery": gallery.text,
-                    "time": DateTime.now()
+                    "time": DateTime.now(),
+                    "imgUrl": imgUrl
                   });
                   Get.back();
                   //Addcelebrity

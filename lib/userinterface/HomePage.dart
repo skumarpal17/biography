@@ -1,5 +1,7 @@
-import 'package:biography/myhomepage.dart';
+import 'package:biography/userinterface/myhomepage.dart';
+import 'package:biography/userinterface/selectedlist.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -12,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var firestore = FirebaseFirestore.instance.collection("category");
   int _current = 0;
   final CarouselController _controller = CarouselController();
 
@@ -91,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        "Categoryies",
+                        "Categories",
                         style: TextStyle(fontSize: 21),
                       ),
                       InkWell(
@@ -105,39 +108,66 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (int i = 0; i <= 5; i++)
-                          Container(
-                            margin:
-                                EdgeInsets.only(right: 6, top: 6, bottom: 10),
-                            color: Colors.amber,
-                            width: Get.width * 0.49,
-                            height: Get.height * 0.26,
-                            child: Column(
-                              children: [
-                                Expanded(
+                  StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: firestore.snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Text("Loading..."),
+                          );
+                        }
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (int i = 0;
+                                  i <= snapshot.data!.docs.length - 1;
+                                  i++)
+                                GestureDetector(
                                   child: Container(
-                                    margin: EdgeInsets.all(8),
-                                    color: Colors.blue,
-                                    width: Get.width,
+                                    margin: EdgeInsets.only(
+                                        right: 6, top: 6, bottom: 10),
+                                    color: Colors.amber,
+                                    width: Get.width * 0.49,
+                                    height: Get.height * 0.26,
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.all(8),
+                                            width: Get.width,
+                                            child: Image(
+                                              image: NetworkImage(snapshot
+                                                  .data!.docs[i]["imgUrl"]),
+                                              alignment: Alignment.center,
+                                              height: double.infinity,
+                                              width: double.infinity,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          snapshot.data!.docs[i]["category"],
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        )
+                                      ],
+                                    ),
                                   ),
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => Selectedlist(
+                                                  id: snapshot.data!.docs[i].id,
+                                                )));
+                                  },
                                 ),
-                                Text(
-                                  "Category Name",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                )
-                              ],
-                            ),
+                            ],
                           ),
-                      ],
-                    ),
-                  )
+                        );
+                      })
                 ],
               ),
               Column(

@@ -8,6 +8,7 @@ import 'addcelebrity.dart';
 
 class Celebritylist extends StatefulWidget {
   final String indexID;
+
   const Celebritylist({Key? key, required this.indexID}) : super(key: key);
 
   @override
@@ -16,6 +17,7 @@ class Celebritylist extends StatefulWidget {
 
 class _CelebritylistState extends State<Celebritylist> {
   late String id;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -24,6 +26,7 @@ class _CelebritylistState extends State<Celebritylist> {
   }
 
   var firestore = FirebaseFirestore.instance.collection("category");
+
   @override
   Widget build(BuildContext context) {
     double wd = MediaQuery.of(context).size.width;
@@ -56,7 +59,8 @@ class _CelebritylistState extends State<Celebritylist> {
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
-                                  'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
+                                  snapshot.data!.docs[index]["imgUrl"]
+                                      .toString(),
                                 ),
                               ),
                             ),
@@ -69,7 +73,8 @@ class _CelebritylistState extends State<Celebritylist> {
                                   IconButton(
                                       onPressed: () {
                                         var id2 = snapshot.data!.docs[index].id;
-                                        Get.to(Updatecelebrity(
+                                        Get.to(
+                                          Updatecelebrity(
                                             name: snapshot.data!.docs[index]
                                                 ["name"],
                                             biolink: snapshot.data!.docs[index]
@@ -79,7 +84,11 @@ class _CelebritylistState extends State<Celebritylist> {
                                             movielist: snapshot
                                                 .data!.docs[index]["gallery"],
                                             id2: id2,
-                                            id: id));
+                                            id: id,
+                                            imgUrl: snapshot.data!.docs[index]
+                                                ["imgUrl"],
+                                          ),
+                                        );
                                       },
                                       icon: Icon(Icons.edit)),
                                   IconButton(

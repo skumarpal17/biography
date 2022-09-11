@@ -43,15 +43,17 @@ class _CategoriesState extends State<Categories> {
                       return InkWell(
                         child: Card(
                           child: ListTile(
-                            leading: CircleAvatar(
-                              radius: 20,
-                              child: ClipOval(
-                                child: Image.network(
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  'https://image.shutterstock.com/image-vector/silhouette-people-unknown-male-person-260nw-1372192277.jpg',
-                                ),
+                            leading: Container(
+                              height: 60,
+                              width: 90,
+                              color: Colors.black12,
+                              child: Image(
+                                image: NetworkImage(
+                                    snapshot.data!.docs[index]["imgUrl"]),
+                                alignment: Alignment.center,
+                                height: double.infinity,
+                                width: double.infinity,
+                                fit: BoxFit.fill,
                               ),
                             ),
                             title: Text(snapshot.data!.docs[index]["category"]),
@@ -68,6 +70,8 @@ class _CategoriesState extends State<Categories> {
                                           category: snapshot.data!.docs[index]
                                               ["category"],
                                           id: id2,
+                                          imgUrl: snapshot.data!.docs[index]
+                                              ["imgUrl"],
                                         ));
                                       },
                                       icon: Icon(Icons.edit)),
@@ -119,7 +123,8 @@ class _CategoriesState extends State<Categories> {
                           setState(() {});
                           id1 = snapshot.data!.docs[index].id;
                           Get.to(() => Celebritylist(indexID: id1),
-                              transition: Transition.circularReveal);
+                              transition: Transition.circularReveal,
+                              duration: Duration(seconds: 1));
                           print("this is category id $id1");
                         },
                       );
