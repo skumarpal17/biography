@@ -1,5 +1,10 @@
+import 'package:biography/userinterface/biography.dart';
+import 'package:biography/userinterface/gallery.dart';
+import 'package:biography/userinterface/movie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class Celebritynmae extends StatefulWidget {
   final String id;
@@ -58,32 +63,56 @@ class _CelebritynmaeState extends State<Celebritynmae> {
                     ListView(
                       shrinkWrap: true,
                       children: [
-                        Container(
-                          height: 55,
-                          child: Card(
-                            child: Text(
-                              snapshot.data!["biography"],
-                              style: TextStyle(fontSize: 25),
+                        InkWell(
+                          child: Container(
+                            height: 55,
+                            child: Card(
+                              child: Text(
+                                "Biography",
+                                // snapshot.data!["biography"],
+                                style: TextStyle(fontSize: 25),
+                              ),
                             ),
                           ),
+                          onTap: () {
+                            Get.to(() => Biography(
+                                  biography: snapshot.data!["biography"],
+                                ));
+                          },
                         ),
-                        Container(
-                          height: 55,
-                          child: Card(
-                            child: Text(
-                              snapshot.data!["movie"],
-                              style: TextStyle(fontSize: 25),
+                        InkWell(
+                          child: Container(
+                            height: 55,
+                            child: Card(
+                              child: Text(
+                                "Movie",
+                                //snapshot.data!["movie"],
+                                style: TextStyle(fontSize: 25),
+                              ),
                             ),
                           ),
+                          onTap: () {
+                            Get.to(() => Movie(
+                                  movie: snapshot.data!["movie"],
+                                ));
+                          },
                         ),
-                        Container(
-                          height: 55,
-                          child: Card(
-                            child: Text(
-                              snapshot.data!["gallery"],
-                              style: TextStyle(fontSize: 25),
+                        InkWell(
+                          child: Container(
+                            height: 55,
+                            child: Card(
+                              child: Text(
+                                "Gallery",
+                                //snapshot.data!["gallery"],
+                                style: TextStyle(fontSize: 25),
+                              ),
                             ),
                           ),
+                          onTap: () {
+                            Get.to(() => Gallery(
+                                  gallery: snapshot.data!["gallery"],
+                                ));
+                          },
                         ),
                       ],
                     ),

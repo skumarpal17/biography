@@ -14,6 +14,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List img = [
+    "assets/images/img1.jpeg",
+    "assets/images/img2.jpeg",
+    "assets/images/img3.jpeg",
+    "assets/images/img4.jpeg",
+    "assets/images/img5.jpeg"
+  ];
   var firestore = FirebaseFirestore.instance.collection("category");
   int _current = 0;
   final CarouselController _controller = CarouselController();
@@ -45,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                         print(_current);
                       });
                     }),
-                items: [1, 2, 3, 4, 5].map((i) {
+                items: img.map((i) {
                   return Builder(
                     builder: (BuildContext context) {
                       return Container(
@@ -53,10 +60,14 @@ class _HomePageState extends State<HomePage> {
                           margin: const EdgeInsets.symmetric(horizontal: 3.0),
                           decoration: BoxDecoration(
                               color: Colors.amber,
-                              borderRadius: BorderRadius.circular(17)),
-                          child: Text(
-                            'text $i',
-                            style: TextStyle(fontSize: 16.0),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(20), // Image border
+                            child: SizedBox.fromSize(
+                              size: Size.fromRadius(48), // Image radius
+                              child: Image.asset('$i', fit: BoxFit.cover),
+                            ),
                           ));
                     },
                   );
